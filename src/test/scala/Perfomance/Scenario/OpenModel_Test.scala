@@ -6,7 +6,7 @@ import io.gatling.core.structure.PopulationBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 
-import scala.Scripts._
+import scala.Perfomance.Scripts._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.DurationInt
 
@@ -18,7 +18,7 @@ class OpenModel_Test extends Simulation {
     //...
   )
 
-  val httpConf: HttpProtocolBuilder = http.baseUrls("http://localhost:443").headers(main_header)
+  val httpConf: HttpProtocolBuilder = http.baseUrl("https://restful-booker.herokuapp.com").headers(main_header)
   //.proxy(Proxy("localhost:8080",8080))
 
   val populationOpen = new ListBuffer[PopulationBuilder]
@@ -34,7 +34,7 @@ class OpenModel_Test extends Simulation {
 
   val listClose = List(
     new UC_TestClass_1(10, 10, 0),
-    new UC_TestClass_2(4, 10, 0)
+    //new UC_TestClass_2(4, 10, 0)
   )
   //  Для открытой модели
   for (element <- listOpen) {
@@ -54,12 +54,9 @@ class OpenModel_Test extends Simulation {
       constantConcurrentUsers((element.Users*1).toInt).during(15.minutes),
       rampConcurrentUsers((element.Users*1).toInt).to((element.Users * 1.2).toInt).during(5.minutes),
       constantConcurrentUsers((element.Users * 1.2).toInt).during(15.minutes),
-    )
+    ).protocols(httpConf)
   }
-
-
-
-
+  
   //setUp(populationOpen.toList).maxDuration(120.minutes)
   setUp(populationClose.toList).maxDuration(120.minutes)
 
