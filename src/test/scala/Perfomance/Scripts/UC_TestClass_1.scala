@@ -36,8 +36,8 @@ class UC_TestClass_1(val users: Double, val pacing_lb: Int, val pacing_rb: Int) 
       exec(http("ScriptName_1")
         .post("/auth")
         //.header("Authorization", "Bearer token")
-        .body(StringBody("{\"username\" : \"admin\",\n    \"password\" : \"password123\"}")).asJson
-        .check(status in(200, 201))
+        .body(StringBody("{\"username\" : \"Roman\",\n    \"password\" : \"password123\"}")).asJson
+        .check(status in(400))
         .check(jsonPath("$.token").notNull)
       )
     )
